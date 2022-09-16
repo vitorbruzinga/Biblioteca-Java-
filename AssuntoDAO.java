@@ -1,0 +1,100 @@
+package ClassesDAO;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import ClassesDeNegocio.Assunto;
+
+public class AssuntoDAO extends Assunto {
+    
+    //*CLASSE ASSUNTODAO INSERT
+      public int inclui ( Connection conn ) throws SQLException { 
+
+// Prepara um comando SQL para execução.
+PreparedStatement pstmt = conn.prepareStatement
+ ( " INSERT INTO ASSUNTOS ( NOME "+" VALUES ( ?) " ) ;
+ 
+ // Configura os valores que serão substituídos nas interrogações do SQL . 
+pstmt.setString(1, nome); 
+// Executa o SQL e guarda o total de registros modificados em tt_modificados . 
+
+int tt_modificados = pstmt.executeUpdate(); 
+
+// Fecha PreparedStatement .
+
+ pstmt.close ( ) ;
+ return tt_modificados ; 
+}
+ 
+      //*CLASSE ASSUNTODAO INSERT/ALTER TABLE
+      
+    public boolean altera ( Connection conn ) 
+throws SQLException 
+{ 
+// Prepara um comando SQL para execução . 
+
+PreparedStatement pstmt = conn.prepareStatement 
+( " UPDATE ASSUNTOS SET NOME = ? , WHERE CODIGO ? " ) ;
+
+ // Configura os valores que serão substituídos nas interrogações do SQL .
+
+ pstmt.setString ( 1 , nome ) ;
+
+pstmt.setString ( 2 , codigo ) ;
+
+ // Executa o SQL que foi montado e retorna a quantidade de registros atualizados . 
+int n = pstmt.executeUpdate ( ) ; 
+pstmt.close ( ) ; 
+if ( n == 1 ) 
+return true ; 
+else
+ return false ; 
+}
+
+    private void Statement(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void Update() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+        //*CLASSE ASSUNTODAO DELETE   
+    
+    public boolean exclui ( Connection conn , int codPesquisa ) throws SQLException
+ { 
+PreparedStatement pstmt = conn.prepareStatement 
+( " DELETE FROM ASSUNTOS WHERE CODIGO = ? " ) ;
+
+ pstmt.setInt ( 1 , codPesquisa ) ; 
+int n = pstmt.executeUpdate ( ) ; 
+pstmt.close ( ) ;
+ if ( n == 1 ) 
+return true ; 
+else
+ return false ;
+}
+    //*CLASSE ASSUNTODAO CONSULTA
+    
+    public Assunto consultaUmAssunto ( Connection conn , int codPesquisa ) throws SQLException { 
+Assunto assunto = null ;
+ PreparedStatement pstmt = conn.prepareStatement ( " SELECT * FROM ASSUNTOS WHERE CODIGO ? " ) ;
+
+ pstmt.setInt ( 1 , codPesquisa ) ; 
+ResultSet rs = pstmt.executeQuery ( ) ; 
+if ( rs.next ( ) ) { 
+
+// Se achou aquele Assunto , instancia um novo objeto para emcapsular as informações : CODIGO , NOME.// 
+
+assunto = new Assunto ( rs.getInt ( " CODIGO " ) , 
+rs.getString ( " NOME " ) 
+) ;
+ } else { // Se não achou , lança uma exceção com a mensagem " assunto não encontrado " . 
+throw new SQLException ( " Assunto não encontrado !!! " ) ; 
+} pstmt.close ( ) ; 
+// retorna CODIGO , NOME encapsuldos 
+// em um objeto instanciado de Assunto .
+ return assunto ; 
+}       
+}
